@@ -9,8 +9,14 @@ fn main() -> Result<()> {
 
     let mut memory: HashMap<String, i64> = HashMap::new();
 
-    for instruction in buffer.lines() {
-        let ops: Vec<String> = instruction?
+    for line in buffer.lines() {
+        let line = line?;
+
+        if line.clone().trim().is_empty() {
+            continue;
+        }
+
+        let ops: Vec<String> = line.trim()
             .split_whitespace()
             .map(String::from)
             .collect();
