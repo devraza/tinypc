@@ -34,16 +34,43 @@ fn main() -> Result<()> {
                     None => panic!(),
                 }
             }
-            "ADD" => accumulator += &ops[1].clone().parse::<i64>().unwrap(),
-            "SUB" => accumulator -= &ops[1].clone().parse::<i64>().unwrap(),
+            "ADD" => {
+                let addition = ops[1].clone().parse::<i64>();
+                if addition.is_ok() {
+                    accumulator -= addition.unwrap();
+                } else {
+                    match memory.get(&ops[1].clone()) {
+                        Some(value) => accumulator += *value,
+                        None => panic!(),
+                    }
+                }
+            }
+            "SUB" => {
+                let subtract = ops[1].clone().parse::<i64>();
+                if subtract.is_ok() {
+                    accumulator -= subtract.unwrap();
+                } else {
+                    match memory.get(&ops[1].clone()) {
+                        Some(value) => accumulator -= *value,
+                        None => panic!(),
+                    }
+                }
+            }
             "HLT" => std::process::exit(0),
             &_ => {
                 match ops[1].as_str() {
                     "DAT" => {
-                        memory.insert(
-                            ops[0].clone(),
-                            ops[2].clone().parse::<i64>().unwrap(),
-                        );
+                        if ops.get(2).is_some() {
+                            memory.insert(
+                                ops[0].clone(),
+                                ops[2].clone().parse::<i64>().unwrap(),
+                            );
+                        } else {
+                            memory.insert(
+                                ops[0].clone(),
+                                0,
+                            );
+                        }
                     }
                     &_ => {
                         panic!()
