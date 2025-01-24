@@ -1,12 +1,14 @@
+use std::collections::HashMap;
 use std::fs::File;
 use std::io::{self, BufRead, BufReader};
-use std::collections::HashMap;
 
-fn process(line: String, accumulator: &mut i64, memory: &mut HashMap<String, i64>, labels: &HashMap<String, usize>) -> usize {
-    let ops: Vec<String> = line.trim()
-        .split_whitespace()
-        .map(String::from)
-        .collect();
+fn process(
+    line: String,
+    accumulator: &mut i64,
+    memory: &mut HashMap<String, i64>,
+    labels: &HashMap<String, usize>,
+) -> usize {
+    let ops: Vec<String> = line.trim().split_whitespace().map(String::from).collect();
 
     match ops[0].as_str() {
         "INP" => {
@@ -41,7 +43,10 @@ fn process(line: String, accumulator: &mut i64, memory: &mut HashMap<String, i64
         "HLT" => std::process::exit(0),
         _ => {
             if ops.len() > 1 && ops[1] == "DAT" {
-                memory.insert(ops[0].clone(), ops.get(2).and_then(|s| s.parse::<i64>().ok()).unwrap_or(0));
+                memory.insert(
+                    ops[0].clone(),
+                    ops.get(2).and_then(|s| s.parse::<i64>().ok()).unwrap_or(0),
+                );
             }
         }
     }
