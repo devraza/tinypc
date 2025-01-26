@@ -4,9 +4,9 @@ use std::io::{self, BufRead, BufReader};
 
 fn retrieve(memory: &mut HashMap<String, i64>, ops: Vec<String>) -> i64 {
     if ops.len() >= 3 {
-        return *memory.get(&ops[2]).unwrap_or(&0);
+        *memory.get(&ops[2]).unwrap_or(&0)
     } else {
-        return *memory.get(&ops[1]).unwrap_or(&0);
+        *memory.get(&ops[1]).unwrap_or(&0)
     }
 }
 
@@ -17,14 +17,13 @@ fn process(
     labels: &HashMap<String, usize>,
     pc: &mut usize,
 ) -> usize {
-    let ops: Vec<String> = line.trim().split_whitespace().map(String::from).collect();
+    let ops: Vec<String> = line.split_whitespace().map(String::from).collect();
 
-    let options: Vec<&str>;
-    if ops.len() >= 3 {
-        options = vec![ops[0].as_str(), ops[1].as_str()];
+    let options: Vec<&str> = if ops.len() >= 3 {
+        vec![ops[0].as_str(), ops[1].as_str()]
     } else {
-        options = vec![ops[0].as_str()];
-    }
+        vec![ops[0].as_str()]
+    };
 
     for op in options {
         match op {
@@ -77,7 +76,7 @@ fn process(
         }
     }
 
-    return 0;
+    0
 }
 
 fn main() -> io::Result<()> {
@@ -93,7 +92,7 @@ fn main() -> io::Result<()> {
         if line.trim().is_empty() {
             continue;
         }
-        let ops: Vec<String> = line.trim().split_whitespace().map(String::from).collect();
+        let ops: Vec<String> = line.split_whitespace().map(String::from).collect();
         if ops.len() > 1 && ops[1] == "DAT" {
             labels.insert(ops[0].clone(), index);
         } else if ops.len() > 1 {
