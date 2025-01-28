@@ -15,7 +15,7 @@ fn process(
     accumulator: &mut i64,
     memory: &mut HashMap<String, i64>,
     labels: &HashMap<String, usize>,
-    pc: &mut usize,
+    pc: usize,
 ) -> usize {
     let ops: Vec<String> = line.split_whitespace().map(String::from).collect();
 
@@ -59,9 +59,27 @@ fn process(
             }
             "BRA" => {
                 if ops.len() >= 3 {
-                    *pc = *labels.get(&ops[2]).unwrap();
+                    return *labels.get(&ops[2]).unwrap();
                 } else {
-                    *pc = *labels.get(&ops[1]).unwrap();
+                    return *labels.get(&ops[1]).unwrap();
+                }
+            }
+            "BRP" => {
+                if *accumulator >= 0 {
+                    if ops.len() >= 3 {
+                        return *labels.get(&ops[2]).unwrap();
+                    } else {
+                        return *labels.get(&ops[1]).unwrap();
+                    }
+                }
+            }
+            "BRZ" => {
+                if *accumulator == 0 {
+                    if ops.len() >= 3 {
+                        return *labels.get(&ops[2]).unwrap();
+                    } else {
+                        return *labels.get(&ops[1]).unwrap();
+                    }
                 }
             }
             "HLT" => std::process::exit(0),
@@ -76,7 +94,7 @@ fn process(
         }
     }
 
-    0
+    return pc + 1;
 }
 
 fn main() -> io::Result<()> {
@@ -94,28 +112,19 @@ fn main() -> io::Result<()> {
         }
         let ops: Vec<String> = line.split_whitespace().map(String::from).collect();
         if ops.len() > 1 && ops[1] == "DAT" {
-            labels.insert(ops[0].clone(), index);
+            labels.insert(ops[0].clone(), ops[2].clone().parse::<usize>().unwrap());
+            println!("{:?}", labels);
         } else if ops.len() > 1 {
             labels.insert(ops[1].clone(), index);
+            println!("{:?}", labels);
         }
         code.push(line);
     }
 
-    let mut pc: usize = 0;
+    let mut pc: usize = 1;
     while pc < code.len() {
         let line = &code[pc];
-        let next_pc = process(
-            line.to_string(),
-            &mut accumulator,
-            &mut memory,
-            &labels,
-            &mut pc,
-        );
-        if next_pc != 0 {
-            pc = next_pc;
-        } else {
-            pc += 1;
-        }
+        pc = process(line.to_string(), &mut accumulator, &mut memory, &labels, pc);
     }
 
     Ok(())
