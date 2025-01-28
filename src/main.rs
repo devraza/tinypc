@@ -113,10 +113,8 @@ fn main() -> io::Result<()> {
         let ops: Vec<String> = line.split_whitespace().map(String::from).collect();
         if ops.len() > 1 && ops[1] == "DAT" {
             labels.insert(ops[0].clone(), ops[2].clone().parse::<usize>().unwrap());
-            println!("{:?}", labels);
         } else if ops.len() > 1 {
             labels.insert(ops[1].clone(), index);
-            println!("{:?}", labels);
         }
         code.push(line);
     }
