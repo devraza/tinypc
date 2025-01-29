@@ -2,19 +2,11 @@ use std::collections::HashMap;
 use std::fs::File;
 use std::io::{self, BufRead, BufReader};
 
-fn retrieve(memory: &HashMap<String, i64>, ops: &[String]) -> i64 {
+fn retrieve(labels: &HashMap<String, usize>, ops: &[String]) -> i64 {
     if ops.len() >= 3 {
-        *memory.get(&ops[2]).unwrap_or(&0)
+        *labels.get(&ops[2]).unwrap_or(&0) as i64
     } else {
-        *memory.get(&ops[1]).unwrap_or(&0)
-    }
-}
-
-fn branch(labels: &HashMap<String, usize>, ops: &[String]) -> usize {
-    if ops.len() >= 3 {
-        *labels.get(&ops[2]).unwrap_or(&0)
-    } else {
-        *labels.get(&ops[1]).unwrap_or(&0)
+        *labels.get(&ops[1]).unwrap_or(&0) as i64
     }
 }
 
@@ -39,31 +31,31 @@ fn process(
             memory.insert(key.clone(), *accumulator);
         }
         Some("LDA") => {
-            *accumulator = retrieve(memory, &ops);
+            *accumulator = retrieve(labels, &ops);
         }
         Some("ADD") => {
             if let Ok(value) = ops[1].parse::<i64>() {
                 *accumulator += value;
             } else {
-                *accumulator += retrieve(memory, &ops);
+                *accumulator += retrieve(labels, &ops);
             }
         }
         Some("SUB") => {
             if let Ok(value) = ops[1].parse::<i64>() {
                 *accumulator -= value;
             } else {
-                *accumulator -= retrieve(memory, &ops);
+                *accumulator -= retrieve(labels, &ops);
             }
         }
-        Some("BRA") => return branch(labels, &ops),
+        Some("BRA") => return retrieve(labels, &ops) as usize,
         Some("BRP") => {
             if *accumulator >= 0 {
-                return branch(labels, &ops);
+                return retrieve(labels, &ops) as usize;
             }
         }
         Some("BRZ") => {
             if *accumulator == 0 {
-                return branch(labels, &ops);
+                return retrieve(labels, &ops) as usize;
             }
         }
         Some("HLT") => std::process::exit(0),
