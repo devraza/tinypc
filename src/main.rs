@@ -19,7 +19,7 @@ fn process(
 ) -> usize {
     let ops: Vec<String> = line.split_whitespace().map(String::from).collect();
 
-    match ops.get(0).map(String::as_str) {
+    match ops.first().map(String::as_str) {
         Some("INP") => {
             let mut s = String::new();
             io::stdin().read_line(&mut s).unwrap();
