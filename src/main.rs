@@ -10,6 +10,14 @@ fn retrieve(memory: &mut HashMap<String, i64>, ops: Vec<String>) -> i64 {
     }
 }
 
+fn branch(labels: &HashMap<String, usize>, ops: Vec<String>) -> usize {
+    if ops.len() >= 3 {
+        return *labels.get(&ops[2]).unwrap();
+    } else {
+        return *labels.get(&ops[1]).unwrap();
+    }
+}
+
 fn process(
     line: String,
     accumulator: &mut i64,
@@ -58,28 +66,16 @@ fn process(
                 }
             }
             "BRA" => {
-                if ops.len() >= 3 {
-                    return *labels.get(&ops[2]).unwrap();
-                } else {
-                    return *labels.get(&ops[1]).unwrap();
-                }
+                return branch(labels, ops);
             }
             "BRP" => {
                 if *accumulator >= 0 {
-                    if ops.len() >= 3 {
-                        return *labels.get(&ops[2]).unwrap();
-                    } else {
-                        return *labels.get(&ops[1]).unwrap();
-                    }
+                    return branch(labels, ops);
                 }
             }
             "BRZ" => {
                 if *accumulator == 0 {
-                    if ops.len() >= 3 {
-                        return *labels.get(&ops[2]).unwrap();
-                    } else {
-                        return *labels.get(&ops[1]).unwrap();
-                    }
+                    return branch(labels, ops);
                 }
             }
             "HLT" => std::process::exit(0),
