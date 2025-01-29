@@ -97,7 +97,7 @@ fn main() -> io::Result<()> {
         code.push(line);
     }
 
-    let mut pc: usize = 1;
+    let mut pc: usize = 0;
     while pc < code.len() {
         let line = &code[pc];
         pc = process(line, &mut accumulator, &mut memory, &labels, pc);
