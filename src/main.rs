@@ -102,7 +102,7 @@ fn main() -> io::Result<()> {
     let mut labels: HashMap<String, usize> = HashMap::new();
     let mut code: Vec<String> = Vec::new();
 
-    let valid: [&str; 3] = ["BRA", "BRZ", "BRP"];
+    let valid: [&str; 10] = ["BRA", "BRZ", "BRP", "OUT", "STA", "SUB", "LDA", "ADD", "INP", "HLT"];
 
     for (index, line) in reader.lines().enumerate() {
         let line = line?;
