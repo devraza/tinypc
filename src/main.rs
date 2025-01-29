@@ -100,10 +100,13 @@ fn process(
 fn main() -> io::Result<()> {
     let file = File::open("code.asm")?;
     let reader = BufReader::new(file);
+
     let mut accumulator: i64 = 0;
     let mut memory: HashMap<String, i64> = HashMap::new();
     let mut labels: HashMap<String, usize> = HashMap::new();
     let mut code: Vec<String> = Vec::new();
+
+    let valid: [&str; 3] = ["BRA", "BRZ", "BRP"];
 
     for (index, line) in reader.lines().enumerate() {
         let line = line?;
@@ -113,8 +116,8 @@ fn main() -> io::Result<()> {
         let ops: Vec<String> = line.split_whitespace().map(String::from).collect();
         if ops.len() > 1 && ops[1] == "DAT" {
             labels.insert(ops[0].clone(), ops[2].clone().parse::<usize>().unwrap());
-        } else if ops.len() > 1 {
-            labels.insert(ops[1].clone(), index);
+        } else if ops.len() > 1 && !valid.contains(&&*ops[0].clone()) {
+            labels.insert(ops[0].clone(), index);
         }
         code.push(line);
     }
