@@ -4,7 +4,7 @@ LMC assembly interpreter written in pure safe Rust.
 ## Supported Instructions
 `tinypc` has support for *all* of the typical LMC instructions.
 
-> **Note:** Adding on more useful instructions such as a multiply instruction is beyond the scope of this interpreter.
+> **Note** Adding on more useful instructions such as a multiply instruction is beyond the scope of this interpreter.
 
 - `INP`
 - `LDA`
@@ -15,4 +15,5 @@ LMC assembly interpreter written in pure safe Rust.
 - `BRA`
 - `BRP`
 - `BRZ`
+- `DAT`
 - `HLT`
